@@ -2,15 +2,29 @@
 import express from 'express'
 import bodyParser from 'body-parser'
 import { graphqlExpress, graphiqlExpress } from 'apollo-server-express'
+import { createServer } from 'http'
+import { SubscriptionServer } from 'subscriptions-transport-ws'
+import { execute, subscribe } from 'graphql'
 // local imports
 import schema from './modules/api/schema'
 
 // our application
 const app = express()
+const port = 4000
 
 app.get('/', (req, res) => res.send('hello world'))
 
 app.use('/graphql', bodyParser.json(), graphqlExpress({ schema }))
-app.use('/graphiql', graphiqlExpress({ endpointURL: '/graphql' }))
+app.use('/graphiql', graphiqlExpress({
+  endpointURL: '/graphql',
+  subscriptionsEndpoint: `ws://localhost:${port}/subscriptions`
+}))
 
-app.listen(4000, () => console.log('server now listening at :4000'))
+const server = createServer(app)
+server.listen(port, () => {
+  console.log(`server now listening at :${port}`)
+  new SubscriptionServer(
+    { execute, subscribe, schema },
+    { server, path: '/subscriptions' }
+  )
+})
