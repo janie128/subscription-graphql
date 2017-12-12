@@ -1,5 +1,4 @@
 // external imports
-import 'babel-polyfill'
 import fs from 'fs'
 import path from 'path'
 import { graphql } from 'graphql'
@@ -7,6 +6,7 @@ import { introspectionQuery } from 'graphql/utilities'
 import mkdirp from 'mkdirp'
 // local imports
 import Schema from '../server/modules/api/schema'
+import { staticApiSchema } from '../config/projectPaths'
 
 graphql(Schema, introspectionQuery)
   .then(result => {
@@ -21,8 +21,8 @@ graphql(Schema, introspectionQuery)
         if (err) {
           throw new Error(err)
         }
-        fs.writeFileSync('../build/schema.json', JSON.stringify(result, null, 2))
-        console.log("Successfully built schema.")
+        fs.writeFileSync(staticApiSchema, JSON.stringify(result, null, 2))
+        console.log(`Successfully built schema in ${staticApiSchema}.`)
       })
     }
   })

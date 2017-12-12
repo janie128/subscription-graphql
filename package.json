@@ -3,13 +3,17 @@
   "version": "0.1.0",
   "private": true,
   "devDependencies": {
-    "react-scripts": "1.0.17"
-  },
-  "dependencies": {
     "@babel/core": "^7.0.0-beta.34",
     "@babel/node": "^7.0.0-beta.34",
     "@babel/preset-es2015": "^7.0.0-beta.34",
     "@babel/preset-stage-0": "^7.0.0-beta.34",
+    "babel-plugin-relay": "^1.4.1",
+    "babel-polyfill": "^6.26.0",
+    "react-app-rewired": "^1.3.8",
+    "react-scripts": "1.0.17",
+    "relay-compiler": "^1.4.1"
+  },
+  "dependencies": {
     "apollo-server-express": "^1.2.0",
     "body-parser": "^1.18.2",
     "express": "^4.16.2",
@@ -18,14 +22,19 @@
     "mkdirp": "^0.5.1",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
-    "subscriptions-transport-ws": "^0.9.4"
+    "react-relay": "^1.4.1",
+    "subscriptions-transport-ws": "^0.9.4",
+    "whatwg-fetch": "^2.0.3"
   },
   "scripts": {
+    "relay": "relay-compiler --src ./src --schema build/schema.json",
+    "relay:watch": "npm run relay -- --watch",
     "build:schema": "babel-node scripts/build-schema",
-    "start": "react-scripts start",
+    "start": "react-app-rewired start",
     "start:server": "babel-node server/index",
-    "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
+    "build": "react-app-rewired build",
+    "test": "react-app-rewired test --env=jsdom",
     "eject": "react-scripts eject"
-  }
+  },
+  "proxy": "http://localhost:4000/"
 }

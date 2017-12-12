@@ -12,7 +12,7 @@ import schema from './modules/api/schema'
 const app = express()
 const port = 4000
 
-app.get('/', (req, res) => res.send('hello world'))
+app.get('/', (req, res) => res.send('Hello world! You are at the server port'))
 
 app.use('/graphql', bodyParser.json(), graphqlExpress({ schema }))
 app.use('/graphiql', graphiqlExpress({
