@@ -1,11 +1,8 @@
+// external imports
 import { GraphQLObjectType, GraphQLList, GraphQLID } from 'graphql'
+// local imports
 import { MemberType, MessageType } from './objectTypes'
-
-export const theMemberList = [
-  { firstName: 'First', lastName: 'User' }
-]
-
-export const theMessageList = []
+import { getMessageList, getMemberList } from './memoryDb'
 
 const query = new GraphQLObjectType({
   name: 'Query',
@@ -14,7 +11,7 @@ const query = new GraphQLObjectType({
       name: 'Members',
       type: new GraphQLList(MemberType),
       description: 'A list of members',
-      resolve: () => theMemberList
+      resolve: getMemberList
     },
     messages: {
       name: 'Messages',
@@ -24,14 +21,7 @@ const query = new GraphQLObjectType({
           type: GraphQLID
         }
       },
-      resolve: (_, { channelID: idFilter }) => {
-        if (idFilter) {
-          return theMessageList.filter(
-            ({ channelID }) => channelID === idFilter
-          )
-        }
-        return theMessageList
-      }
+      resolve: (_, { channelID: idFilter }) => getMessageList(idFilter)
     }
   }
 })

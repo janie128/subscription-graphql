@@ -2,7 +2,7 @@
 import { GraphQLString, GraphQLList, GraphQLID, GraphQLNonNull } from 'graphql'
 // local imports
 import pubSub from '../../../pubSub'
-import { theMessageList } from '../query'
+import { addToMessageList, getMessageList } from '../query/memoryDb'
 import { MessageType } from '../query/objectTypes'
 
 const addMessage = {
@@ -12,9 +12,9 @@ const addMessage = {
     message: { type: new GraphQLNonNull(GraphQLString) }
   },
   resolve: (_, { channelID, message }) => {
-    theMessageList.push({ channelID, message })
-    pubSub.publish('messageAdded', { messageAdded: { channelID, message } })
-    return theMessageList
+    const newMessage = addToMessageList({ channelID, message })
+    pubSub.publish('messageAdded', { messageAdded: newMessage })
+    return getMessageList()
   }
 }
 

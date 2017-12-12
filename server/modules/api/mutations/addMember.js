@@ -2,7 +2,7 @@
 import { GraphQLString, GraphQLList } from 'graphql'
 // local imports
 import pubSub from '../../../pubSub'
-import { theMemberList } from '../query'
+import { addToMemberList, getMemberList } from '../query/memoryDb'
 import { MemberType } from '../query/objectTypes'
 
 const addMember = {
@@ -11,10 +11,10 @@ const addMember = {
     firstName: { type: GraphQLString },
     lastName: { type: GraphQLString }
   },
-  resolve: (_, args) => {
-    theMemberList.push({ firstName: args.firstName, lastName: args.lastName })
-    pubSub.publish('memberList', { memberList: theMemberList })
-    return theMemberList
+  resolve: (_, {firstName, lastName}) => {
+    const newMember = addToMemberList({ firstName, lastName })
+    pubSub.publish('memberAdded', { memberAdded: newMember })
+    return getMemberList()
   }
 }
 
