@@ -1,21 +1,34 @@
 // external imports
-import { GraphQLString, GraphQLList } from 'graphql'
+import { GraphQLString, GraphQLNonNull } from 'graphql'
+import { mutationWithClientMutationId, offsetToCursor } from 'graphql-relay'
 // local imports
 import pubSub from '../../../pubSub'
-import { addToMemberList, getMemberList } from '../query/memoryDb'
-import { MemberType } from '../query/objectTypes'
+import { addToMemberList } from '../query/memoryDb'
+import { MemberEdgeType } from '../query/objectTypes'
 
-const addMember = {
-  type: new GraphQLList(MemberType),
-  args: {
-    firstName: { type: GraphQLString },
-    lastName: { type: GraphQLString }
+const addMember = mutationWithClientMutationId({
+  name: 'AddMember',
+  description: 'Adding a new member to the instance. ID will be auto generated based on time',
+  inputFields: {
+    firstName: { type: new GraphQLNonNull(GraphQLString) },
+    lastName: { type: new GraphQLNonNull(GraphQLString) }
   },
-  resolve: (_, {firstName, lastName}) => {
+  outputFields: {
+    member: {
+      type: MemberEdgeType,
+      resolve: ({ member }) => {
+        return ({
+          cursor: offsetToCursor(member.id),
+          node: member
+        })
+      }
+    }
+  },
+  mutateAndGetPayload: ({ firstName, lastName }) => {
     const newMember = addToMemberList({ firstName, lastName })
     pubSub.publish('memberAdded', { memberAdded: newMember })
-    return getMemberList()
+    return { member: newMember }
   }
-}
+})
 
 export default addMember

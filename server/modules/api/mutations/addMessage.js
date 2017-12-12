@@ -1,21 +1,34 @@
 // external imports
-import { GraphQLString, GraphQLList, GraphQLID, GraphQLNonNull } from 'graphql'
+import { GraphQLString, GraphQLID, GraphQLNonNull } from 'graphql'
+import { mutationWithClientMutationId, offsetToCursor } from 'graphql-relay'
 // local imports
 import pubSub from '../../../pubSub'
-import { addToMessageList, getMessageList } from '../query/memoryDb'
-import { MessageType } from '../query/objectTypes'
+import { addToMessageList } from '../query/memoryDb'
+import { MessageEdgeType } from '../query/objectTypes'
 
-const addMessage = {
-  type: new GraphQLList(MessageType),
-  args: {
+const addMessage = mutationWithClientMutationId({
+  name: 'AddMessage',
+  description: 'Adding a new message to the instance. Must include channel ID for message',
+  inputFields: {
     channelID: { type: new GraphQLNonNull(GraphQLID) },
     message: { type: new GraphQLNonNull(GraphQLString) }
   },
-  resolve: (_, { channelID, message }) => {
+  outputFields: {
+    message: {
+      type: MessageEdgeType,
+      resolve: ({ message }) => {
+        return ({
+          cursor: offsetToCursor(message.id),
+          node: message
+        })
+      }
+    }
+  },
+  mutateAndGetPayload: ({ channelID, message }) => {
     const newMessage = addToMessageList({ channelID, message })
     pubSub.publish('messageAdded', { messageAdded: newMessage })
-    return getMessageList()
+    return { message: newMessage }
   }
-}
+})
 
 export default addMessage

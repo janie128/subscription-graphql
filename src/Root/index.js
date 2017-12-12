@@ -9,9 +9,16 @@ const RootView = () => (
     environment={environment}
     query={graphql`
       query RootQuery {
-        members {
-          firstName
-          lastName
+        instance {
+          members {
+            edges {
+              node {
+                id
+                firstName
+                lastName
+              }
+            }
+          }
         }
       }
     `}
@@ -22,8 +29,8 @@ const RootView = () => (
       }
 
       return <div>
-        {props && props.members.map(({ firstName, lastName }, index) =>
-          <div key={index}>{`${firstName} ${lastName}`}</div>)}
+        {props && props.instance.members.edges.map(({ node }) =>
+          <div key={node.id}>{`${node.firstName} ${node.lastName} (${node.id})`}</div>)}
       </div>
     }}
   />
