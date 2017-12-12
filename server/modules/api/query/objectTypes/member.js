@@ -1,19 +1,25 @@
-import { GraphQLObjectType, GraphQLString, GraphQLID } from 'graphql'
+// external imports
+import { GraphQLObjectType, GraphQLString, GraphQLNonNull } from 'graphql'
+import { connectionDefinitions, globalIdField } from 'graphql-relay'
+// local imports
+import { nodeInterface } from '../../definitions'
 
-const MemberType = new GraphQLObjectType({
+export const MemberType = new GraphQLObjectType({
   name: 'Member',
   description: 'A member with first and last name',
-  fields: {
-    id: {
-      type: GraphQLID
-    },
+  fields: () => ({
+    id: globalIdField('Member'),
     firstName: {
       type: GraphQLString
     },
     lastName: {
       type: GraphQLString
     }
-  }
+  }),
+  interfaces: () => [nodeInterface]
 })
 
-export default MemberType
+export const { connectionType: MemberConnectionType, edgeType: MemberEdgeType } = connectionDefinitions({
+  nodeType: new GraphQLNonNull(MemberType),
+  name: 'Member'
+})

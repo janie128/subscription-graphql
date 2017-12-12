@@ -1,28 +1,17 @@
 // external imports
-import { GraphQLObjectType, GraphQLList, GraphQLID } from 'graphql'
+import { GraphQLObjectType } from 'graphql'
 // local imports
-import { MemberType, MessageType } from './objectTypes'
-import { getMessageList, getMemberList } from './memoryDb'
+import { InstanceType } from './objectTypes'
+import { nodeField } from '../definitions'
 
 const query = new GraphQLObjectType({
   name: 'Query',
   fields: {
-    members: {
-      name: 'Members',
-      type: new GraphQLList(MemberType),
-      description: 'A list of members',
-      resolve: getMemberList
+    instance: {
+      type: InstanceType,
+      resolve: () => ({})
     },
-    messages: {
-      name: 'Messages',
-      type: new GraphQLList(MessageType),
-      args: {
-        channelID: {
-          type: GraphQLID
-        }
-      },
-      resolve: (_, { channelID: idFilter }) => getMessageList(idFilter)
-    }
+    node: nodeField
   }
 })
 
