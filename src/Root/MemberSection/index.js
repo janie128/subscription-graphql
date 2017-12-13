@@ -70,7 +70,7 @@ MemberSection.props = {
 export default createFragmentContainer(MemberSection, graphql`
   fragment MemberSection_instance on Instance {
     id
-    members {
+    members(first: 1000) @connection(key: "Instance_members") {
       edges {
         node {
           id

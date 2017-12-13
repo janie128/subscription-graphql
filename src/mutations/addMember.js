@@ -12,17 +12,6 @@ export default mutationFromQuery(graphql`
             lastName
           }
         }
-        instance {
-          members {
-            edges {
-              node {
-                id
-                firstName
-                lastName
-              }
-            }
-          }
-        }
       }
     }
 `)

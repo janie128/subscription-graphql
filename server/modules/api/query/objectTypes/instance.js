@@ -12,6 +12,9 @@ const InstanceType = new GraphQLObjectType({
     members: {
       name: 'Members',
       type: new GraphQLNonNull(MemberConnectionType),
+      args: {
+        ...connectionArgs
+      },
       description: 'A list of members',
       resolve: (_, args) => connectionFromArray(getMemberList(), args)
     },
