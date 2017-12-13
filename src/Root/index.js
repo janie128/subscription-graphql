@@ -3,6 +3,7 @@ import React from 'react'
 import { QueryRenderer, graphql } from 'react-relay'
 // local imports
 import environment from '../relayEnv'
+import MemberSection from './MemberSection'
 
 const RootView = () => (
   <QueryRenderer
@@ -10,15 +11,7 @@ const RootView = () => (
     query={graphql`
       query RootQuery {
         instance {
-          members {
-            edges {
-              node {
-                id
-                firstName
-                lastName
-              }
-            }
-          }
+          ...MemberSection_instance
         }
       }
     `}
@@ -28,9 +21,12 @@ const RootView = () => (
         throw new Error(error.message)
       }
 
+      if (!props) {
+        return null
+      }
+
       return <div>
-        {props && props.instance.members.edges.map(({ node }) =>
-          <div key={node.id}>{`${node.firstName} ${node.lastName} (${node.id})`}</div>)}
+        <MemberSection instance={props.instance}/>
       </div>
     }}
   />

@@ -19,3 +19,4 @@
 *.log
 yarn.lock
 graphql.config.json
+*.graphql.js

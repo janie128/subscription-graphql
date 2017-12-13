@@ -4,7 +4,7 @@ import { mutationWithClientMutationId, offsetToCursor } from 'graphql-relay'
 // local imports
 import pubSub from '../../../pubSub'
 import { addToMemberList } from '../query/memoryDb'
-import { MemberEdgeType } from '../query/objectTypes'
+import { MemberEdgeType, InstanceType } from '../query/objectTypes'
 
 const addMember = mutationWithClientMutationId({
   name: 'AddMember',
@@ -22,12 +22,16 @@ const addMember = mutationWithClientMutationId({
           node: member
         })
       }
+    },
+    instance: {
+      type: InstanceType,
+      resolve: () => ({})
     }
   },
   mutateAndGetPayload: ({ firstName, lastName }) => {
     const newMember = addToMemberList({ firstName, lastName })
     pubSub.publish('memberAdded', { memberAdded: newMember })
-    return { member: newMember }
+    return { member: newMember, instance: {} }
   }
 })
 
