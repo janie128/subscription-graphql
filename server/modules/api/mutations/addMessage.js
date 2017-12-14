@@ -26,7 +26,7 @@ const addMessage = mutationWithClientMutationId({
   },
   mutateAndGetPayload: ({ channelID, message }) => {
     const newMessage = addToMessageList({ channelID, message })
-    pubSub.publish('messageAdded', { messageAdded: newMessage })
+    pubSub.publish('messageAdded', { messageAdded: { message: newMessage } })
     return { message: newMessage }
   }
 })

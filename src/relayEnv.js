@@ -1,9 +1,10 @@
 import 'whatwg-fetch'
 import { Environment, Network, RecordSource, Store } from 'relay-runtime'
+import { SubscriptionClient } from 'subscriptions-transport-ws'
 
 const store = new Store(new RecordSource())
 
-const network = Network.create((operation, variables) => {
+const fetchQuery = (operation, variables) => {
   return fetch('/graphql', {
     method: 'POST',
     credentials: 'same-origin',
@@ -36,7 +37,29 @@ const network = Network.create((operation, variables) => {
 
       return Promise.resolve(responseJson)
     })
-})
+  }
+
+const setupSubscription = (config, variables, cacheConfig, observer) => {
+  const query = config.text
+
+  const subscriptionClient = new SubscriptionClient('ws://localhost:4000/subscriptions', {reconnect: true})
+
+  const onNext = (result) => {
+    observer.onNext(result)
+  }
+  const onError = (error) => {
+    observer.onError(error)
+  }
+  const onComplete = () => {
+    observer.onCompleted()
+  }
+
+  subscriptionClient
+    .request({ query, variables })
+    .subscribe(onNext, onError, onComplete)
+}
+
+const network = Network.create(fetchQuery, setupSubscription)
 
 const environment = new Environment({
   network,

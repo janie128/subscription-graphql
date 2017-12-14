@@ -26,7 +26,7 @@ const addMember = mutationWithClientMutationId({
   },
   mutateAndGetPayload: ({ firstName, lastName }) => {
     const newMember = addToMemberList({ firstName, lastName })
-    pubSub.publish('memberAdded', { memberAdded: newMember })
+    pubSub.publish('memberAdded', { memberAdded: { member: newMember } })
     return { member: newMember }
   }
 })

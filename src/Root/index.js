@@ -4,6 +4,7 @@ import { QueryRenderer, graphql } from 'react-relay'
 // local imports
 import environment from '../relayEnv'
 import MemberSection from './MemberSection'
+import Notifications from './Notifications'
 
 const RootView = () => (
   <QueryRenderer
@@ -12,6 +13,7 @@ const RootView = () => (
       query RootQuery {
         instance {
           ...MemberSection_instance
+          ...Notifications_instance
         }
       }
     `}
@@ -25,8 +27,9 @@ const RootView = () => (
         return null
       }
 
-      return <div>
+      return <div style={{ display: 'flex', flexDirection: 'row' }}>
         <MemberSection instance={props.instance}/>
+        <Notifications instance={props.instance}/>
       </div>
     }}
   />

@@ -15,7 +15,7 @@ class MemberSection extends React.Component {
   addMember = () => {
     const { firstName, lastName } = this.state
     const mutation = addMemberMutation({ firstName, lastName }, {
-      onSuccess: () => console.log('Successfully added member'),
+      onSuccess: response => console.log('Successfully added member'),
       onFailure: transaction => console.log(transaction)
     })
 

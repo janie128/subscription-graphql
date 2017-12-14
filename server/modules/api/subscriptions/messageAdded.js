@@ -1,12 +1,28 @@
 // external imports
 import { withFilter } from 'graphql-subscriptions'
-import { GraphQLID, GraphQLNonNull } from 'graphql'
+import { GraphQLID, GraphQLNonNull, GraphQLObjectType } from 'graphql'
+import { offsetToCursor } from 'graphql-relay'
 // local imports
-import { MessageType } from '../query/objectTypes'
+import { MessageEdgeType } from '../query/objectTypes'
 import pubSub from '../../../pubSub'
 
+const MessageAddedPayloadType = new GraphQLObjectType({
+  name: 'MessageAddedPayload',
+  fields: () => ({
+    message: {
+      type: MessageEdgeType,
+      resolve: ({ message }) => {
+        return ({
+          cursor: offsetToCursor(message.id),
+          node: message
+        })
+      }
+    }
+  })
+})
+
 const messageAdded = {
-  type: MessageType,
+  type: MessageAddedPayloadType,
   args: {
     channelID: {
       type: new GraphQLNonNull(GraphQLID)
@@ -15,7 +31,7 @@ const messageAdded = {
   subscribe: withFilter(
     () => pubSub.asyncIterator('messageAdded'),
     (payload, variables) => {
-      return payload.messageAdded.channelID === variables.channelID
+      return payload.messageAdded.message.channelID === variables.channelID
     }
   )
 }
