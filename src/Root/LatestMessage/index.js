@@ -37,6 +37,15 @@ class LatestMessage extends React.Component {
     }
   }
 
+  setChannel = number => {
+    // Don't do anything if already at this channel
+    if (this.state.channel === number) {
+      return null
+    }
+    // Otherwise set the channel state and clear the latest message
+    this.setState({ channel: number, latestMessage: '' })
+  }
+
   render() {
     const activeColour = { backgroundColor: '#d8f7ff' }
     const { latestMessage, channel } = this.state
@@ -49,18 +58,15 @@ class LatestMessage extends React.Component {
         </div>
         <div style={styles.rightContainer}>
           <div style={{...styles.pill, ...(channel === 1 ? activeColour : {})}}
-               onClick={() => this.setState({ channel: 1 })}
-          >
+               onClick={() => this.setChannel(1)}>
             Ch 1
           </div>
           <div style={{...styles.pill, ...(channel === 2 ? activeColour : {})}}
-               onClick={() => this.setState({ channel: 2 })}
-          >
+               onClick={() => this.setChannel(2)}>
             Ch 2
           </div>
           <div style={{...styles.pill, ...(channel === 3 ? activeColour : {})}}
-               onClick={() => this.setState({ channel: 3 })}
-          >
+               onClick={() => this.setChannel(3)}>
             Ch 3
           </div>
         </div>
