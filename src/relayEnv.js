@@ -42,7 +42,12 @@ const fetchQuery = (operation, variables) => {
 const setupSubscription = (config, variables, cacheConfig, observer) => {
   const query = config.text
 
-  const subscriptionClient = new SubscriptionClient('ws://localhost:4000/subscriptions', {reconnect: true})
+  const subscriptionClient = new SubscriptionClient(
+    'ws://localhost:4000/subscriptions',
+    {
+      reconnect: true
+    }
+  )
 
   const onNext = (result) => {
     observer.onNext(result)
@@ -54,9 +59,16 @@ const setupSubscription = (config, variables, cacheConfig, observer) => {
     observer.onCompleted()
   }
 
-  subscriptionClient
+  const client = subscriptionClient
     .request({ query, variables })
     .subscribe(onNext, onError, onComplete)
+
+  // Return a dispose method to be able to unsubscribe and trigger closing the socket connection
+  return { dispose: () => {
+    // unsubscribe and close this socket connection
+    client.unsubscribe()
+    subscriptionClient.close()
+  }}
 }
 
 const network = Network.create(fetchQuery, setupSubscription)

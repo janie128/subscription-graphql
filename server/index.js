@@ -24,7 +24,13 @@ const server = createServer(app)
 server.listen(port, () => {
   console.log(`server now listening at :${port}`)
   new SubscriptionServer(
-    { execute, subscribe, schema },
+    {
+      onConnect: connectionParams => console.log('client subscription connected!', connectionParams),
+      onDisconnect: () => console.log('client subscription disconnected!'),
+      execute,
+      subscribe,
+      schema
+    },
     { server, path: '/subscriptions' }
   )
 })

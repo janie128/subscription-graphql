@@ -5,9 +5,9 @@ import env from '../relayEnv'
 
 const subscriptionFromQuery = query => (input, callbacks) => ({
   commit(configs) {
-    requestSubscription(env, {
+    return requestSubscription(env, {
       subscription: query,
-      variables: { input },
+      variables: input,
       onError: callbacks.onError,
       onCompleted: callbacks.onCompleted,
       onNext: callbacks.onNext,

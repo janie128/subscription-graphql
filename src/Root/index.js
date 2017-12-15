@@ -5,6 +5,7 @@ import { QueryRenderer, graphql } from 'react-relay'
 import environment from '../relayEnv'
 import MemberSection from './MemberSection'
 import Notifications from './Notifications'
+import LatestMessage from './LatestMessage'
 
 const RootView = () => (
   <QueryRenderer
@@ -14,6 +15,7 @@ const RootView = () => (
         instance {
           ...MemberSection_instance
           ...Notifications_instance
+          ...LatestMessage_instance
         }
       }
     `}
@@ -27,9 +29,12 @@ const RootView = () => (
         return null
       }
 
-      return <div style={{ display: 'flex', flexDirection: 'row' }}>
-        <MemberSection instance={props.instance}/>
-        <Notifications instance={props.instance}/>
+      return <div>
+        <LatestMessage instance={props.instance}/>
+        <div style={{ display: 'flex', flexDirection: 'row' }}>
+          <MemberSection instance={props.instance}/>
+          <Notifications instance={props.instance}/>
+        </div>
       </div>
     }}
   />
