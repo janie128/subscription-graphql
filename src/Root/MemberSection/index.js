@@ -19,19 +19,9 @@ class MemberSection extends React.Component {
       onFailure: transaction => console.log(transaction)
     })
 
-    mutation.commit([
-      {
-        type: 'RANGE_ADD',
-        parentID: this.props.instance.id,
-        connectionInfo: [
-          {
-            key: 'Instance_members',
-            rangeBehavior: 'append'
-          }
-        ],
-        edgeName: 'member'
-      }
-    ])
+    // Not using any configs for this mutation relay cache update as it will be handled
+    // by new events for the member added subscription
+    mutation.commit()
   }
 
   render() {
