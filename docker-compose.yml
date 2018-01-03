@@ -1,0 +1,46 @@
+version: "3"
+
+networks:
+  app:
+    driver: bridge
+
+services:
+  server1:
+    image: subscription_poc:dev
+    container_name: "server1"
+    networks:
+      - app
+    ports:
+      - "4000:4000"
+    volumes:
+      - "./server:/poc/server"
+      - "./build:/poc/build"
+    environment:
+      - SERVER_PORT=4000
+    depends_on:
+      - redis
+    command: "npm run start:server"
+    
+  server2:
+    image: subscription_poc:dev
+    container_name: "server2"
+    networks:
+      - app
+    ports:
+      - "4001:4001"
+    volumes:
+      - "./server:/poc/server"
+      - "./build:/poc/build"
+    environment:
+      - SERVER_PORT=4001
+    depends_on:
+      - redis
+    command: "npm run start:server"
+
+  redis:
+    image: redis
+    container_name: "redis"
+    networks:
+      - app
+    ports:
+      - "6379:6379"

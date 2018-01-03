@@ -10,7 +10,7 @@ import schema from './modules/api/schema'
 
 // our application
 const app = express()
-const port = 4000
+const port = process.env.SERVER_PORT
 
 app.get('/', (req, res) => res.send('Hello world! You are at the server port'))
 
