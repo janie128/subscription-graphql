@@ -29,7 +29,11 @@ const messageAdded = {
     }
   },
   subscribe: withFilter(
-    () => pubSub.asyncIterator('messageAdded'),
+    (_, args, context) => {
+      console.log('messageAdded, args', args)
+      console.log('messageAdded, context', context)
+      return pubSub.asyncIterator('messageAdded')
+    },
     (payload, variables) => {
       return payload.messageAdded.message.channelID === variables.channelID
     }

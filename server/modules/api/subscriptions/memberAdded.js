@@ -22,7 +22,11 @@ const MemberAddedPayloadType = new GraphQLObjectType({
 
 const memberAdded = {
   type: MemberAddedPayloadType,
-  subscribe: () => pubSub.asyncIterator('memberAdded')
+  subscribe: (a, b, context) => {
+    console.log(context.headers)
+    console.log(context.cookies)
+    return pubSub.asyncIterator('memberAdded')
+  }
 }
 
 export default memberAdded

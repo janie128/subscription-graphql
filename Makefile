@@ -18,3 +18,12 @@ up: build-app compose
 down: ## Shut down docker compose
 	@echo "${CYAN}Shutting Down Docker Environment.${NC}"
 	docker-compose down -v
+
+log-server1:
+	docker logs -f server1
+
+log-server2:
+	docker logs -f server2
+
+log-redis:
+	docker logs -f redis

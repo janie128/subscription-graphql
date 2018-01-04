@@ -13,7 +13,13 @@ To start dev client: `yarn start`. App will be running at port `3000`.
 [Tutorial: GraphQL Subscriptions on the Server](https://dev-blog.apollodata.com/tutorial-graphql-subscriptions-server-side-e51c32dc2951)  
 [How to GraphQL - Subscriptions](https://www.howtographql.com/graphql-js/9-subscriptions/)  
 [Apollo GraphQL Subscriptions Docs](https://www.apollographql.com/docs/graphql-subscriptions/)  
- 
+
+
+### Helpful resources on Redis
+[Redis Pub/Sub: Intro Guide](http://redisgreen.net/blog/pubsub-intro/)  
+[Redis Pub/Sub: Howto Guide](http://redisgreen.net/blog/pubsub-howto/)  
+[GraphQL subscriptions with Redis Pub Sub](https://dev-blog.apollodata.com/graphql-subscriptions-with-redis-pub-sub-f636fc84a0c4)  
+
 <br><br><br>
 
 **This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).**

@@ -14,10 +14,14 @@ const port = process.env.SERVER_PORT
 
 app.get('/', (req, res) => res.send('Hello world! You are at the server port'))
 
-app.use('/graphql', bodyParser.json(), graphqlExpress({ schema }))
-app.use('/graphiql', graphiqlExpress({
-  endpointURL: '/graphql',
-  subscriptionsEndpoint: `ws://localhost:${port}/subscriptions`
+app.use('/graphql', bodyParser.json(), graphqlExpress(req =>
+  ({ schema, context: req })))
+app.use('/graphiql', graphiqlExpress(req => {
+  return {
+    endpointURL: '/graphql',
+    subscriptionsEndpoint: `ws://localhost:${port}/subscriptions`,
+    websocketConnectionParams: { cookies: req.cookies, headers: req.headers },
+  }
 }))
 
 const server = createServer(app)
@@ -25,7 +29,10 @@ server.listen(port, () => {
   console.log(`server now listening at :${port}`)
   new SubscriptionServer(
     {
-      onConnect: connectionParams => console.log('client subscription connected!', connectionParams),
+      onConnect: connectionParams => {
+        console.log('client subscription connected!')
+        return connectionParams
+      },
       onDisconnect: () => console.log('client subscription disconnected!'),
       execute,
       subscribe,
