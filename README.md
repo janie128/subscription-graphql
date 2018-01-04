@@ -1,12 +1,29 @@
 # Subscriptions with GraphQL + Relay
 
 ### Starting the App
+#### Docker image
+Before starting app, run `make dev-image` to build docker image for app.  
+Any time there is a change in dependencies, image will need to be rebuilt.  
+Code changes do not require rebuild as code is volume mounted to docker containers.
+
+#### Running servers in docker containers
+To start 2 servers with the Redis server: `make up`.  
+Servers will be running at port `4000` and `4001`, `graphiql` will be available at both ports for the respective servers.  
+Currently, server does not restart with server-side changes.  
+To shutdown servers: `make down`
+
+#### Running local client
+To start dev client: `yarn start`. App will be running at port `3000`.  
+*Note: There is no load balancer so client only talks to one server, namely the one at port `4000`.  
+To trigger graphql operations to the other server, use the graphiql interface at port `4001`.  
+Run relay compiler in watch mode while making client side changes: `npm run relay -- --watch`  
+
+### Other useful commands
 Build graphql schema: `npm run build:schema`  
 Run relay compiler: `npm run relay`  
-Run relay compiler in watch mode: `npm run relay -- --watch`  
+Or to run both: `make build-app`  
+To view server and redis logs: `make log-server1`, `make log-server2` and `make log-redis`
 
-To start the server: `npm run start:server`. Server will be running at port `4000`, and `graphiql` will be available at this port.  
-To start dev client: `yarn start`. App will be running at port `3000`.
 <br><br>
 
 ### Helpful resources on graphql subscriptions
