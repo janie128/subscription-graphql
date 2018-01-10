@@ -35,7 +35,7 @@
   "scripts": {
     "relay": "relay-compiler --src ./src --schema build/schema.json",
     "relay:watch": "npm run relay -- --watch",
-    "build:schema": "babel-node scripts/build-schema",
+    "build:schema": "BUILD=true babel-node scripts/build-schema",
     "start": "react-app-rewired start",
     "start:server": "babel-node server/index",
     "build": "react-app-rewired build",
